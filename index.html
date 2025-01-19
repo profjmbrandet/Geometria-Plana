@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo de Geometria Plana</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f0f8ff;
+    }
+
+    canvas {
+      border: 2px solid #000;
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .controls {
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info {
+      margin-top: 20px;
+      padding: 10px;
+      background: #ffffff;
+      border: 2px solid #000;
+      width: 80%;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    input {
+      padding: 8px;
+      font-size: 16px;
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo de Geometria Plana</h1>
+  <p>Escolha uma figura geométrica e insira os valores para aprender sobre ela:</p>
+
+  <div class="controls">
+    <label>
+      Lado/Base/Raio (px):
+      <input type="number" id="dimensionInput" placeholder="Ex: 100" min="10">
+    </label>
+    <label>
+      Altura (px) (somente para triângulo):
+      <input type="number" id="heightInput" placeholder="Ex: 150" min="10">
+    </label>
+    <div>
+      <button onclick="drawTriangle()">Triângulo</button>
+      <button onclick="drawSquare()">Quadrado</button>
+      <button onclick="drawCircle()">Círculo</button>
+      <button onclick="clearCanvas()">Limpar Tela</button>
+    </div>
+  </div>
+
+  <canvas id="geometryCanvas" width="600" height="400"></canvas>
+  <div class="info" id="infoBox">Digite os valores e clique em um botão para começar!</div>
+
+  <script>
+    const canvas = document.getElementById('geometryCanvas');
+    const ctx = canvas.getContext('2d');
+    const infoBox = document.getElementById('infoBox');
+
+    // Obter valores de entrada
+    function getDimension() {
+      return parseFloat(document.getElementById('dimensionInput').value) || 100;
+    }
+
+    function getHeight() {
+      return parseFloat(document.getElementById('heightInput').value) || 100;
+    }
+
+    // Função para limpar a tela
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      infoBox.textContent = "Tela limpa! Digite novos valores e escolha uma figura.";
+    }
+
+    // Função para desenhar um triângulo
+    function drawTriangle() {
+      const base = getDimension();
+      const height = getHeight();
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, canvas.height / 2 - height / 2); // Topo
+      ctx.lineTo(canvas.width / 2 - base / 2, canvas.height / 2 + height / 2); // Esquerda
+      ctx.lineTo(canvas.width / 2 + base / 2, canvas.height / 2 + height / 2); // Direita
+      ctx.closePath();
+
+      ctx.fillStyle = "#FFCC00";
+      ctx.fill();
+      ctx.strokeStyle = "#000";
+      ctx.stroke();
+
+      const area = (base * height) / 2;
+      const perimeter = base + 2 * Math.sqrt(Math.pow(base / 2, 2) + Math.pow(height, 2));
+
+      infoBox.textContent = `Triângulo:
+      - Base: ${base} px
+      - Altura: ${height} px
+      - Área: ${area.toFixed(2)} px²
+      - Perímetro: ${perimeter.toFixed(2)} px`;
+    }
+
+    // Função para desenhar um quadrado
+    function drawSquare() {
+      const side = getDimension();
+      const x = (canvas.width - side) / 2;
+      const y = (canvas.height - side) / 2;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#00CCFF";
+      ctx.fillRect(x, y, side, side);
+      ctx.strokeStyle = "#000";
+      ctx.strokeRect(x, y, side, side);
+
+      const area = Math.pow(side, 2);
+      const perimeter = 4 * side;
+
+      infoBox.textContent = `Quadrado:
+      - Lado: ${side} px
+      - Área: ${area} px²
+      - Perímetro: ${perimeter} px`;
+    }
+
+    // Função para desenhar um círculo
+    function drawCircle() {
+      const radius = getDimension();
+      const x = canvas.width / 2;
+      const y = canvas.height / 2;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, 2 * Math.PI);
+      ctx.closePath();
+
+      ctx.fillStyle = "#FF99CC";
+      ctx.fill();
+      ctx.strokeStyle = "#000";
+      ctx.stroke();
+
+      const area = Math.PI * Math.pow(radius, 2);
+      const circumference = 2 * Math.PI * radius;
+
+      infoBox.textContent = `Círculo:
+      - Raio: ${radius} px
+      - Área: ${area.toFixed(2)} px²
+      - Circunferência: ${circumference.toFixed(2)} px`;
+    }
+  </script>
+</body>
+</html>
